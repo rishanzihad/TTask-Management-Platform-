@@ -60,6 +60,7 @@ const CreateTask = () => {
                         <span className="label-text">Deadline</span>
                     </label>
                     <input
+                    required
                         className='input w-full input-bordered text-white'
                         type="date"  
                         id="deadline"
@@ -74,9 +75,10 @@ const CreateTask = () => {
                         <span className="label-text">Priority</span>
                     </label>
                     <select
+                    
                         className='select  select-bordered w-full text-white'
                         id="priority"
-                        {...register('priority')}
+                        {...register('priority',{ required: true })}
                     >
                         <option value="high">High</option>
                         <option value="medium">Medium</option>

@@ -3,6 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import NavBar from "../Shared/Navbar/NavBar";
 
 import { Toaster } from "react-hot-toast";
+import Footer from "../Shared/Footer/Footer";
 
 
 const MainLay = () => {
@@ -15,7 +16,7 @@ const MainLay = () => {
      
            <Outlet></Outlet>
           
-         
+         <Footer></Footer>
             <Toaster/>
         </div>
     );

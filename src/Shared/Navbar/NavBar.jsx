@@ -11,7 +11,7 @@ const NavBar = () => {
 
     const navOptions = <>
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/dashboard">DashBoard</Link></li>
+        <li><Link to="dashboard/taskList">DashBoard</Link></li>
       
       
       

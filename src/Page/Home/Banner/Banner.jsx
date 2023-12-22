@@ -13,7 +13,7 @@ const Banner = () => {
             
             {
                 user? <div className="absolute inset-0 flex items-center justify-center">
-                <button className="btn text-white md:btn-lg btn-sm">Let’s Explore</button>
+                <Link to='dashboard/taskList'><button className="btn text-white md:btn-lg btn-sm">Let’s Explore</button></Link>
             </div>: <div className="absolute inset-0 flex items-center justify-center">
                 <Link to='/login'><button className="btn text-white md:btn-lg btn-sm">Let’s Explore</button></Link>
             </div>

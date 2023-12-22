@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 const TaskList = () => {
     const axiosSecure = useAxiosSecure();
@@ -56,23 +58,50 @@ const TaskList = () => {
         }
     };
     
-
+    const handleDelete = (task) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const res = await axiosSecure.delete(`/task/${task._id}`);
+                if (res.data.deletedCount > 0) {
+                   
+                    toast.success(`${task.title} has Been Deleted`);
+                    fetchTasks();
+                }
+            }
+        });
+    } 
+    const fetchTasks = async () => {
+        try {
+            const response = await axiosSecure.get('/task');
+            setTasks(response.data);
+        } catch (error) {
+            console.error('Error fetching tasks:', error);
+        }
+    };
 
 
     return (
         <div>
             <h2 className='text-4xl text-center font-bold mb-5'>Task List</h2>
             <DragDropContext onDragEnd={handleDragEnd}>
-                <div className='lg:flex w-full text-white gap-4'>
+                <div className='lg:flex w-full  text-white gap-4'>
                     {/* To-Do List Section */}
                     <Droppable droppableId="todo-list" direction="vertical">
                         {(provided) => (
                             <div
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
-                                className='bg-red-500 lg:w-1/3 p-3'
+                                className='bg-red-500 min-h-60 lg:w-1/3 p-3'
                             >
-                                <h1 className='text-4xl font-bold mb-3'>To-Do List</h1>
+                                <h1 className='text-4xl text-center font-bold mb-3'>To-Do List</h1>
                                 {tasks.filter((task) => task.status === 'todo-list') // Adjust the condition based on your task structure
                                         .map((task, index) =>(
                                     <Draggable key={task._id} draggableId={task._id} index={index}>
@@ -89,6 +118,7 @@ const TaskList = () => {
                                                         <p>Deadline: {task.deadline}</p>
                                                         <p>Priority: {task.priority}</p>
                                                     </div>
+                                                    <button onClick={()=>handleDelete(task)} className='btn text-white bg-red-500'>Delete</button>
                                                 </div>
                                             </div>
                                         )}
@@ -100,7 +130,7 @@ const TaskList = () => {
                     </Droppable>
 
                     {/* On-Going Section */}
-                    <div className='lg:w-1/3 bg-yellow-400 p-3'>
+                    <div className='lg:w-1/3 min-h-60 bg-yellow-400 p-3'>
                         <h1 className='text-4xl text-center font-bold mb-3'>On-Going</h1>
                         <Droppable droppableId="on-going-list" direction="vertical">
                             {(provided) => (
@@ -125,6 +155,7 @@ const TaskList = () => {
                                                                 <p>Deadline: {task.deadline}</p>
                                                                 <p>Priority: {task.priority}</p>
                                                             </div>
+                                                            <button onClick={()=>handleDelete(task)} className='btn text-white bg-red-500'>Delete</button>
                                                         </div>
                                                     </div>
                                                 )}
@@ -137,7 +168,7 @@ const TaskList = () => {
                     </div>
 
                     {/* Completed Section */}
-                    <div className='lg:w-1/3 bg-orange-400 p-3'>
+                    <div className='lg:w-1/3 min-h-60 bg-orange-400 p-3'>
                         <h1 className='text-4xl font-bold text-center mb-3'>Completed</h1>
                         <Droppable droppableId="completed-list" direction="vertical">
                             {(provided) => (
@@ -162,6 +193,7 @@ const TaskList = () => {
                                                                 <p>Deadline: {task.deadline}</p>
                                                                 <p>Priority: {task.priority}</p>
                                                             </div>
+                                                            <button onClick={()=>handleDelete(task)} className='btn text-white bg-red-500'>Delete</button>
                                                         </div>
                                                     </div>
                                                 )}
