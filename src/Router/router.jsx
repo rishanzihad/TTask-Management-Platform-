@@ -10,6 +10,7 @@ import Register from "../Page/Register/Register";
 import Dashboard from "../LayOut/Dashboard";
 import CreateTask from "../Page/DashBoardPage/CreateTask/CreateTask";
 import TaskList from "../Page/DashBoardPage/TaskList/TaskList";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -32,15 +33,15 @@ const router = createBrowserRouter([
   },
   {
     path:'/dashboard',
-    element:<Dashboard></Dashboard>,
+    element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
     children:[
       {
         path:'dashboard/createtask',
-        element:<CreateTask></CreateTask>
+        element:<PrivateRoute><CreateTask></CreateTask></PrivateRoute>
       },
       {
         path:'taskList',
-        element:<TaskList></TaskList>
+        element:<PrivateRoute><TaskList></TaskList></PrivateRoute>
       }
     ]
   }

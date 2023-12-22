@@ -5,6 +5,8 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 
+import { Toaster } from "react-hot-toast";
+
 const DropdownMenu = ({ isAdmin, isMenuOpen, closeMenu }) => {
 
   return (
@@ -71,6 +73,7 @@ const Dashboard = () => {
 
     <div className="flex-1 md:w-full p-8">
       <Outlet />
+      <Toaster></Toaster>
     </div>
   </div>
   );

@@ -99,7 +99,7 @@ const TaskList = () => {
                             <div
                                 {...provided.droppableProps}
                                 ref={provided.innerRef}
-                                className='bg-red-500 min-h-60 lg:w-1/3 p-3'
+                                className='bg-blue-500 min-h-60 lg:w-1/3 p-3'
                             >
                                 <h1 className='text-4xl text-center font-bold mb-3'>To-Do List</h1>
                                 {tasks.filter((task) => task.status === 'todo-list') // Adjust the condition based on your task structure
@@ -130,7 +130,7 @@ const TaskList = () => {
                     </Droppable>
 
                     {/* On-Going Section */}
-                    <div className='lg:w-1/3 min-h-60 bg-yellow-400 p-3'>
+                    <div className='lg:w-1/3 min-h-60 bg-green-500 p-3'>
                         <h1 className='text-4xl text-center font-bold mb-3'>On-Going</h1>
                         <Droppable droppableId="on-going-list" direction="vertical">
                             {(provided) => (
@@ -168,7 +168,7 @@ const TaskList = () => {
                     </div>
 
                     {/* Completed Section */}
-                    <div className='lg:w-1/3 min-h-60 bg-orange-400 p-3'>
+                    <div className='lg:w-1/3 min-h-60 bg-purple-500 p-3'>
                         <h1 className='text-4xl font-bold text-center mb-3'>Completed</h1>
                         <Droppable droppableId="completed-list" direction="vertical">
                             {(provided) => (
