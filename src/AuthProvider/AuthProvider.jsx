@@ -28,6 +28,15 @@ const AuthProvider = ({children}) => {
         setLoading(true)
         signOut(auth)
     }
+    const handleUpdateProfile = (name, photo) => {
+        const user = auth.currentUser;
+        if (user) {
+            return updateProfile(user, {
+                displayName: name,
+                photoURL: photo
+            });
+        } 
+    }
     useEffect(()=>{
         const unsubscribe =onAuthStateChanged(auth,currentUser=>{
             setUser(currentUser)
@@ -54,7 +63,7 @@ const AuthProvider = ({children}) => {
         }
     },[])
     const authInfo={
-        googleLogin,register,login,user,logOut,loading,
+        googleLogin,register,login,user,logOut,loading,handleUpdateProfile
     }
     return (
         <AuthContext.Provider value={authInfo}>
