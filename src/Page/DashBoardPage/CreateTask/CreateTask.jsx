@@ -9,22 +9,24 @@ const CreateTask = () => {
 
     const onSubmit = async (data) => {
 
-        const formData ={
-            title:data.title,
-            taskDescription:data.taskDescription,
+        const formData = {
+            title: data.title,
+            taskDescription: data.taskDescription,
+            deadline: data.deadline,
+            priority: data.priority,
         }
         console.log(formData)
-        const taskRes =await axiosSecure.post('task',formData)
-        if(taskRes.data.insertedId){
+        const taskRes = await axiosSecure.post('task', formData)
+        if (taskRes.data.insertedId) {
             reset()
             Swal.fire({
-                position:'top-end',
+                position: 'top-end',
                 title: `${data.title} is added to the Task Collection`,
-               showConfirmButton: false,
-               timer: 1500
-              })
+                showConfirmButton: false,
+                timer: 1500
+            })
         }
-            
+
     }
 
 
@@ -50,8 +52,36 @@ const CreateTask = () => {
                         className="textarea textarea-bordered w-full"
                     />
                 </div>
+                <div className="form-control w-full my-6">
+                    <label className="label">
+                        <span className="label-text">Deadline</span>
+                    </label>
+                    <input
+                        className='input w-full input-bordered text-white'
+                        type="date"  
+                        id="deadline"
+                        {...register('deadline')}
+                    />
+                </div>
 
-                {/* Add more form fields for additional task properties */}
+
+
+                <div className="form-control w-full ">
+                    <label className="label">
+                        <span className="label-text">Priority</span>
+                    </label>
+                    <select
+                        className='select  select-bordered w-full text-white'
+                        id="priority"
+                        {...register('priority')}
+                    >
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+
+
                 <button type="submit" className='btn w-full bg-red-500 mt-5 text-white'>Create Task</button>
             </form>
         </div>

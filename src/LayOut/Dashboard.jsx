@@ -15,8 +15,8 @@ const DropdownMenu = ({ isAdmin, isMenuOpen, closeMenu }) => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/dashboard/addCamp">
-              <IoMdAddCircleOutline /> Add Camp
+            <NavLink to="dashboard/taskList">
+              <IoMdAddCircleOutline /> Task List
             </NavLink>
           </li>
           <li>
