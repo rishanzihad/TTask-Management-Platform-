@@ -1,10 +1,11 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
+import TaskCard from './TaskCard';
 
 const TaskList = () => {
     const axiosSecure = useAxiosSecure();
     const [tasks, setTasks] = useState([]);
-  
+
 
     useEffect(() => {
         // Fetch tasks when the component mounts
@@ -21,22 +22,29 @@ const TaskList = () => {
         fetchTasks();
     }, [axiosSecure]);
 
-    
+
 
     return (
-        <div>
-     
+        <div className='w-full'>
+
             <h2 className='text-4xl text-center font-bold mb-5'>Task List</h2>
-            {tasks.map((task) => (
-                <div key={task._id} className="card text-white bg-base-100 shadow-xl">
-                    <div className="card-body">
-                        <h2 className="card-title">Title: {task.title}</h2>
-                        <p>Description: {task.taskDescription}</p>
-                        <p>Deadline: {task.deadline}</p>
-                        <p>Priority: {task.priority}</p>
-                    </div>
+            <div className='md:flex text-white gap-4'>
+                <div className=' bg-red-500 md:w-1/3 p-3'>
+                    <h1 className='text-4xl   font-bold mb-3'>To-Do-List</h1>
+                  <div className=' flex md:flex-col gap-4'>
+                  {tasks.map((task) => (<TaskCard key={task._id} task={task}></TaskCard>))}
+                  </div>
                 </div>
-            ))}
+                <div className=' md:w-1/3'>
+                    <h1 className='text-4xl font-bold mb-3'>On-Going</h1>
+                </div>
+                <div className=' md:w-1/3'>
+                    <h1 className='text-4xl font-bold mb-3'>Completed</h1>
+                </div>
+
+
+            </div>
+           
         </div>
     );
 };
