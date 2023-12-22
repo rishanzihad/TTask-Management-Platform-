@@ -8,12 +8,15 @@ const CreateTask = () => {
     const { handleSubmit, register, reset, formState: { errors } } = useForm();
 
     const onSubmit = async (data) => {
-
+        const tasksRes = await axiosSecure.get('/task');
+        const order = tasksRes.data.length + 1;
         const formData = {
             title: data.title,
             taskDescription: data.taskDescription,
             deadline: data.deadline,
             priority: data.priority,
+            order,
+            status: 'todo-list'
         }
         console.log(formData)
         const taskRes = await axiosSecure.post('task', formData)

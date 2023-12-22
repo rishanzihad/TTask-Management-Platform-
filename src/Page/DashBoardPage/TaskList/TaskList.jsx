@@ -1,18 +1,16 @@
+
 import { useState, useEffect } from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import useAxiosSecure from '../../../Hooks/useAxiosSecure';
-import TaskCard from './TaskCard';
 
 const TaskList = () => {
     const axiosSecure = useAxiosSecure();
     const [tasks, setTasks] = useState([]);
 
-
     useEffect(() => {
-        // Fetch tasks when the component mounts
         const fetchTasks = async () => {
             try {
                 const response = await axiosSecure.get('/task');
-                // Assuming the response data is an array of tasks
                 setTasks(response.data);
             } catch (error) {
                 console.error('Error fetching tasks:', error);
@@ -22,29 +20,160 @@ const TaskList = () => {
         fetchTasks();
     }, [axiosSecure]);
 
+    const handleDragEnd = async (result) => {
+        if (!result.destination) {
+            return;
+        }
+    
+        const { source, destination } = result;
+    
+        // If the task is dropped back into the same list and position, do nothing
+        if (source.droppableId === destination.droppableId && source.index === destination.index) {
+            return;
+        }
+    
+        const updatedTasks = [...tasks];
+        const [movedTask] = updatedTasks.splice(result.source.index, 1);
+    
+        // Update the status of the moved task
+        movedTask.status = destination.droppableId; // Use your own status values here
+    
+        updatedTasks.splice(result.destination.index, 0, movedTask);
+    
+        // Update tasks in the state
+        setTasks(updatedTasks);
+    
+        // Update task status in the backend (if needed)
+        try {
+            const updatedTasksData = updatedTasks.map((task) => ({
+                _id: task._id,
+                status: task.status,
+            }));
+    
+            await axiosSecure.put('/task/status', { updatedTasks: updatedTasksData });
+        } catch (error) {
+            console.error('Error updating task status:', error);
+        }
+    };
+    
+
 
 
     return (
-        <div className='w-full'>
-
+        <div>
             <h2 className='text-4xl text-center font-bold mb-5'>Task List</h2>
-            <div className='md:flex text-white gap-4'>
-                <div className=' bg-red-500 md:w-1/3 p-3'>
-                    <h1 className='text-4xl   font-bold mb-3'>To-Do-List</h1>
-                  <div className=' flex md:flex-col gap-4'>
-                  {tasks.map((task) => (<TaskCard key={task._id} task={task}></TaskCard>))}
-                  </div>
-                </div>
-                <div className=' md:w-1/3'>
-                    <h1 className='text-4xl font-bold mb-3'>On-Going</h1>
-                </div>
-                <div className=' md:w-1/3'>
-                    <h1 className='text-4xl font-bold mb-3'>Completed</h1>
-                </div>
+            <DragDropContext onDragEnd={handleDragEnd}>
+                <div className='lg:flex w-full text-white gap-4'>
+                    {/* To-Do List Section */}
+                    <Droppable droppableId="todo-list" direction="vertical">
+                        {(provided) => (
+                            <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className='bg-red-500 lg:w-1/3 p-3'
+                            >
+                                <h1 className='text-4xl font-bold mb-3'>To-Do List</h1>
+                                {tasks.filter((task) => task.status === 'todo-list') // Adjust the condition based on your task structure
+                                        .map((task, index) =>(
+                                    <Draggable key={task._id} draggableId={task._id} index={index}>
+                                        {(provided) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                            >
+                                                <div className="card text-white bg-base-100 mb-2 shadow-xl">
+                                                    <div className="card-body">
+                                                        <h2 className="card-title">Title: {task.title}</h2>
+                                                        <p>Description: {task.taskDescription}</p>
+                                                        <p>Deadline: {task.deadline}</p>
+                                                        <p>Priority: {task.priority}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
 
+                    {/* On-Going Section */}
+                    <div className='lg:w-1/3 bg-yellow-400 p-3'>
+                        <h1 className='text-4xl text-center font-bold mb-3'>On-Going</h1>
+                        <Droppable droppableId="on-going-list" direction="vertical">
+                            {(provided) => (
+                                <div
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                >
+                                    {tasks
+                                        .filter((task) => task.status === 'on-going-list') // Adjust the condition based on your task structure
+                                        .map((task, index) => (
+                                            <Draggable key={task._id} draggableId={task._id} index={index}>
+                                                {(provided) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                    >
+                                                        <div className="card text-white mb-2 bg-base-100 shadow-xl">
+                                                            <div className="card-body">
+                                                                <h2 className="card-title">Title: {task.title}</h2>
+                                                                <p>Description: {task.taskDescription}</p>
+                                                                <p>Deadline: {task.deadline}</p>
+                                                                <p>Priority: {task.priority}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </div>
 
-            </div>
-           
+                    {/* Completed Section */}
+                    <div className='lg:w-1/3 bg-orange-400 p-3'>
+                        <h1 className='text-4xl font-bold text-center mb-3'>Completed</h1>
+                        <Droppable droppableId="completed-list" direction="vertical">
+                            {(provided) => (
+                                <div
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
+                                >
+                                    {tasks
+                                        .filter((task) => task.status === 'completed-list') // Adjust the condition based on your task structure
+                                        .map((task, index) => (
+                                            <Draggable key={task._id} draggableId={task._id} index={index}>
+                                                {(provided) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                    >
+                                                        <div className="card  text-white mb-2 bg-base-100 shadow-xl">
+                                                            <div className="card-body">
+                                                                <h2 className="card-title">Title: {task.title}</h2>
+                                                                <p>Description: {task.taskDescription}</p>
+                                                                <p>Deadline: {task.deadline}</p>
+                                                                <p>Priority: {task.priority}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </div>
+                </div>
+            </DragDropContext>
         </div>
     );
 };

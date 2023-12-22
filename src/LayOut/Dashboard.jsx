@@ -11,29 +11,15 @@ const DropdownMenu = ({ isAdmin, isMenuOpen, closeMenu }) => {
         <>
           <li>
             <NavLink to="dashboard/createtask">
-              <FaHome></FaHome>Crate Task
+            <IoMdAddCircleOutline /> Crate Task
             </NavLink>
           </li>
           <li>
             <NavLink to="dashboard/taskList">
-              <IoMdAddCircleOutline /> Task List
+              <FaHome></FaHome>Task List
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/dashboard/manageItems">
-              <FaList></FaList> Manage Items
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/bookings">
-              <FaBook></FaBook> Manage Bookings
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/dashboard/users">
-              <FaUser></FaUser> All Users
-            </NavLink>
-          </li>
+          
         </>
      
       <div className="divider"></div>
